@@ -1,21 +1,22 @@
 <p>
   <img
     src="https://raw.githubusercontent.com/CMG-GUTS/curated-microbiota/main/assets/favicon-curated-microbiota-oneline.svg"
-    width="82"
-    height="82"
-    alt="mllabiome icon"
+    width="350"
+    height="270"
+    alt="mllabiome curated microbiota icon"
   >
   &nbsp;&nbsp;&nbsp;
   <a href="https://cmg-guts.github.io/mllabiome/">
     <img
       src="https://raw.githubusercontent.com/CMG-GUTS/curated-microbiota/main/assets/mllabiome-abundance-table.svg"
-      width="350"
+      width="270"
       align="right"
-      alt="From microbiome abundance data through machine learning to learned patterns and interactions"
+      alt="abundance matrix"
     >
   </a>
 </p>
 Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for the mllabiome ecosystem.
+
 
 ```python
 from curated_microbiota.collections import brown_mdd
