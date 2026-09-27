@@ -11,4 +11,3 @@ venv/
 *.tar.gz
 SHA256SUMS
 RELEASE.md
-release-manifest.json

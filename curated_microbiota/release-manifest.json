@@ -1,0 +1,562 @@
+{
+  "release": "data-v0.1.1",
+  "benchmark": {
+    "name": "mllabiome-benchmark",
+    "version": 1
+  },
+  "collections": {
+    "brown_mdd": {
+      "version": "0.1.1",
+      "asset": "brown_mdd-0.1.1.tar.gz",
+      "sha256": "7c9f3d638424eac484949f9b114e276e7adf092097899c58ae097002ec2a5ccc",
+      "files": {
+        "counts.tsv": "47231f116ba2561bc57ca1f24e862fad34992b2e12d01752bfbf9a35c8cbec85",
+        "feature_metadata.tsv": "e9d376217b5bfd4ab2ab2e3c141551df80c30881eb70aaa186ed7a20f5cce9eb",
+        "metadata.tsv": "3c7f96a12a93ddb1767d5999e3d42909843c291172e52aaa8d6f5d42651b8205",
+        "provenance.yaml": "f0894330ac9e23a3c3f612fa7eccd0a57af1ffeb8386c2e6b730888837bb497e",
+        "qc.tsv": "700938b1f2ecadc6417bf6ff34e14ddd3c1dcb1221cde6ceeb814e53282f7e93",
+        "splits/mdd/mllabiome-benchmark-v1/cv_splits.tsv": "4e894835823e742b45dac3a4e02aafb1d97534664909efad2fdbaaee17de7213",
+        "splits/promis_depression/mllabiome-benchmark-v1/cv_splits.tsv": "a52b3db3a3c902b133e17835004a4905d6fe0cff5cd413a5ff8d0f149957dc95"
+      },
+      "targets": [
+        "mdd",
+        "promis_depression"
+      ],
+      "target_specs": [
+        {
+          "name": "mdd",
+          "column": "target_mdd",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "control",
+            "mdd"
+          ],
+          "positive_class": 1
+        },
+        {
+          "name": "promis_depression",
+          "column": "target_depression_severity",
+          "task": "regression",
+          "problem_type": "regression"
+        }
+      ],
+      "benchmark_targets": [
+        "mdd",
+        "promis_depression"
+      ],
+      "split_sets": {
+        "mdd": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "repeated_nested_cv",
+          "outer_folds": 5,
+          "inner_folds": 3,
+          "repeats": 3,
+          "random_state": 42,
+          "inner_grouping": "auto",
+          "file": "splits/mdd/mllabiome-benchmark-v1/cv_splits.tsv"
+        },
+        "promis_depression": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "repeated_nested_cv",
+          "outer_folds": 5,
+          "inner_folds": 3,
+          "repeats": 3,
+          "random_state": 42,
+          "inner_grouping": "auto",
+          "file": "splits/promis_depression/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      }
+    },
+    "prjna1190316": {
+      "version": "0.1.1",
+      "asset": "prjna1190316-0.1.1.tar.gz",
+      "sha256": "a52f0e63faff0d082c7a5062c54d16e7f534f92e374357bf073b3a83d44ca449",
+      "files": {
+        "counts.tsv": "53ea60ceff098b513880d220a3a924c54fc5a6bf73e8e2f293d95b0c607515b9",
+        "feature_metadata.tsv": "c4c6cc9d6e2fcd041ff85ae72ded07cc67ce004a9ae7a8307b7b6c43a757df95",
+        "metadata.tsv": "93ea12836a23f1ee05911522797a119fc7f84b970d015ecf264edaa8836ec599",
+        "provenance.yaml": "0f74739c7f04fada5431c4655d15a51097ee3f6af71a900083f5e3b483972b57",
+        "qc.tsv": "e099bfb06df1403f5fa5d1d5904e1e1e2461d47102f2f0501a612930242c306a",
+        "splits/mdd/mllabiome-benchmark-v1/cv_splits.tsv": "bc66a250854ebde89e167e923204b87445b815802e698149fd71cab22393de3f"
+      },
+      "targets": [
+        "mdd"
+      ],
+      "target_specs": [
+        {
+          "name": "mdd",
+          "column": "target_mdd",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "control",
+            "mdd"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "mdd"
+      ],
+      "split_sets": {
+        "mdd": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "repeated_nested_cv",
+          "outer_folds": 5,
+          "inner_folds": 3,
+          "repeats": 3,
+          "random_state": 42,
+          "inner_grouping": "auto",
+          "file": "splits/mdd/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      }
+    },
+    "healthy_colombia": {
+      "version": "0.1.1",
+      "asset": "healthy_colombia-0.1.1.tar.gz",
+      "sha256": "c98dbb3b2aeb6725ad5ac3f2745c756226318a7a6a6f5a747a06370d96b107e4",
+      "files": {
+        "counts.tsv": "f0502601dbda96d93a16769889546dc6f40c6d6626558107e54656ca432879ca",
+        "feature_metadata.tsv": "da5e1d7042e7faf2218ebefe20d8d43df666b4c40065cfce465bf3509518c324",
+        "metadata.tsv": "f6a5d6d3bff8abc850a85a4cc2ea6824da7879f8a4a25b3e7ef333c65ae33250",
+        "provenance.yaml": "7d91fde0728742ce2e4d4e177bc777ffbd214fbc8042d8568c51227808e4582d",
+        "qc.tsv": "123d0842bd9af916998209d0b45bc580f4957c9f80e6cc96c935f3696d104206"
+      },
+      "targets": [],
+      "target_specs": [],
+      "benchmark_targets": []
+    },
+    "lampp_scz": {
+      "version": "0.1.1",
+      "asset": "lampp_scz-0.1.1.tar.gz",
+      "sha256": "87169159d9866e52e25dda7222d0483b615f1b8ddf3481a9d1b0e4b57f9b7445",
+      "files": {
+        "metadata.tsv": "9e579f2eea79e9fc52e7ab009c432c7e0be66792c0031c01e5789ccc1f8aa896",
+        "profiles.tsv": "4fa8dcd837362616b0b151b76af61f9d54e26f7c081ca238cbe1168d3481e5c2",
+        "provenance.yaml": "35567e006638051661fd29d1b7e67ffa11a79d6d9980d7803b7646f1fcb4ebc3",
+        "qc.tsv": "8391976a1268218f1006526ef31d092843d3be042b1c364f8bb3f20826d8ef37",
+        "splits/scz/mllabiome-benchmark-v1/cv_splits.tsv": "1a449cce852d0a7b162b2b2661f9980cecd3e9bbec632f5368b2486b9cb8e56e",
+        "test_metadata.tsv": "b9f1e482944381ed9de713000865e6b18a303a69645a963c0f3832e29ab15008",
+        "test_profiles.tsv": "e410ed588bbebc029c8db89d5c892a06ef26bf55c2fde590878689fd1a7962d9"
+      },
+      "targets": [
+        "scz"
+      ],
+      "target_specs": [
+        {
+          "name": "scz",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "scz"
+      ],
+      "split_sets": {
+        "scz": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "repeated_nested_cv",
+          "outer_folds": 5,
+          "inner_folds": 3,
+          "repeats": 3,
+          "random_state": 42,
+          "inner_grouping": "auto",
+          "file": "splits/scz/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "lampp_crc": {
+      "version": "0.1.1",
+      "asset": "lampp_crc-0.1.1.tar.gz",
+      "sha256": "e71cb401c47841e3fef63fdb55191d2ba8e459c62da9c4c77339a226ec3d804d",
+      "files": {
+        "metadata.tsv": "1c2a9e46d34b244de6b94d2df8bf10b19b15a6fa564546fbf09d9b3982a9e332",
+        "profiles.tsv": "d11caf5efd0bf0697c4edb0285bdd5f00101682edd056d3ed3ee2b45db3f3516",
+        "provenance.yaml": "6cd7fcb85a64b3a6c1fd39df7eea04b774d4f7753f40c7215b7a085a94f542be",
+        "qc.tsv": "d9e98e243a12951b0d8672e2792bc6648451129ac9ac165416eccb7f70abc8df",
+        "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv": "8909387d9aca2addd0014c02583362b698f830b1a67e525413a8241a5d600209",
+        "test_metadata.tsv": "bfb31095453cacc6e713926ffa6a9cad0a1970f2c6e1e3013227f60a502b102c",
+        "test_profiles.tsv": "5c328e117320b71656199ac81f1020ce9614a9588c83155ab138a425c802713c"
+      },
+      "targets": [
+        "crc"
+      ],
+      "target_specs": [
+        {
+          "name": "crc",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "crc"
+      ],
+      "split_sets": {
+        "crc": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 8,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "outer_group",
+          "file": "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "lampp_ghs": {
+      "version": "0.1.1",
+      "asset": "lampp_ghs-0.1.1.tar.gz",
+      "sha256": "1b892ad18c643fcf19916f38c5efa9cd0f340d093e1521f465594d907b77da95",
+      "files": {
+        "metadata.tsv": "dfedd81e2f1c8b1c3ebc382f19ae5feeaf2113009db5eaccdb1e29d7970aedcd",
+        "profiles.tsv": "e3851c3b86aab5e9f72f06ea25699bbbb41f96a8f047c852cc0f6df31f08fa7e",
+        "provenance.yaml": "c140605f37e38467c7dd92d54109b748589a9291da75ddfea7dabfe3a830b958",
+        "qc.tsv": "596e6aac98a5758096375de53fad879a5c0a51461e79b14b0bfd0db56600a10f",
+        "splits/ghs/mllabiome-benchmark-v1/cv_splits.tsv": "8f44a6820d352f07e8ab89c2f480db6aefe29c9b18c218522ba8938316248b7f",
+        "test_metadata.tsv": "4ab4944658f1a2eb3443f394f4e47cf65f829d185626ae482b8647aeb57edfa9",
+        "test_profiles.tsv": "083cc93aa41eebcc3a6f2f0b5b571d1e6513434aedda3a44db22f92f8ade898e"
+      },
+      "targets": [
+        "ghs"
+      ],
+      "target_specs": [
+        {
+          "name": "ghs",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "ghs"
+      ],
+      "split_sets": {
+        "ghs": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 54,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "outer_group",
+          "file": "splits/ghs/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "lampp_ibd": {
+      "version": "0.1.1",
+      "asset": "lampp_ibd-0.1.1.tar.gz",
+      "sha256": "bdb4e5f2fe0ea9f498dd64b26176706f3a6f3cfd7070939e90cabea6d8e2d71c",
+      "files": {
+        "metadata.tsv": "a46e4af720a103295a29574e573367d5b4c36ccaf6088879dc11fe9cad3ee128",
+        "profiles.tsv": "2ad55c5caec9ecdff2c898c597d64efde8911ebdca94b0e21ed6ac33837d6a0b",
+        "provenance.yaml": "79682f97b115ed06cfbc80a352bf33a1aac4de6f9d5c7026587617c2216bc29f",
+        "qc.tsv": "bb0ec292af76d13bbcc2cb9ecd8bd914b09ccecea5abe1e61080f70ea7af4e03",
+        "splits/ibd/mllabiome-benchmark-v1/cv_splits.tsv": "b304be0d010f7c7c2f82a03c7dedc3a79f72dc5addd077e67f8e0b0c5eb396ae",
+        "test_metadata.tsv": "0a25b9037428e2921c81c0000e86b21c8bc318b7e773364c53b748f9ce08762a",
+        "test_profiles.tsv": "293c6010c2247e9ba86e0d94426f2d5b3b8f5f7aa5a5fd5040dab5e8892d465c"
+      },
+      "targets": [
+        "ibd"
+      ],
+      "target_specs": [
+        {
+          "name": "ibd",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "ibd"
+      ],
+      "split_sets": {
+        "ibd": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 2,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "subject",
+          "file": "splits/ibd/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "lampp_dm7": {
+      "version": "0.1.1",
+      "asset": "lampp_dm7-0.1.1.tar.gz",
+      "sha256": "2e51748a543d7d2a49074a8fdc2b286542413cb6332c7423dec7761b859b8ce0",
+      "files": {
+        "metadata.tsv": "e360fb43d7354b62af541af490ba5b67db2ce9c6f311e84fc30cfd850470e13b",
+        "profiles.tsv": "2dd37a5924e3ac50659e09acfaa99c50aaa7c3bbdd72b5d96fe8f70e79ca80ea",
+        "provenance.yaml": "a86f1fc1ea68439e4b69144a8f68ad1726d1fdab291560ad9ed6a79fe1baffa5",
+        "qc.tsv": "c80b4e60fbceb94b6384097f4f46db50d5549ed3447530668586a9e5bf63bf10",
+        "splits/dm7/mllabiome-benchmark-v1/cv_splits.tsv": "fccf04ce047d119fd1addd9f18069cba6035bc99e6e81b5a35e9b75984e5d2b3",
+        "test_metadata.tsv": "1009caa112266e45656ab915d60efa4f85fab7ec8410f9a4238d58549aecbbc4",
+        "test_profiles.tsv": "20d3f1dea917d7f838245c023fa21badd284b1f78754015f9f5aba15dfc8c221"
+      },
+      "targets": [
+        "dm7"
+      ],
+      "target_specs": [
+        {
+          "name": "dm7",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "dm7"
+      ],
+      "split_sets": {
+        "dm7": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 2,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "subject",
+          "file": "splits/dm7/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "lampp_dm90": {
+      "version": "0.1.1",
+      "asset": "lampp_dm90-0.1.1.tar.gz",
+      "sha256": "02a1dff6e1b6420325b672523173e108fff78d7aea12d4712e3ed245c3fa923c",
+      "files": {
+        "metadata.tsv": "c78e8a31f23ddf9c3119d38f0eebc4c3c22772570c033a150c1b0858f928fb25",
+        "profiles.tsv": "15050c82db9d2041a282c7f8ca82fcee3e2168ffdf20c5ec5c18f3a6b50f869c",
+        "provenance.yaml": "0bdc96db8bac704ad1a9bb5fce42f9b10a881bb54a968b972c831ffff79e9726",
+        "qc.tsv": "37548ebe67073fb512df1afe6ff2ccbd32643e8676fa04db60e12ace548ab697",
+        "splits/dm90/mllabiome-benchmark-v1/cv_splits.tsv": "d3645eb68797de7145057fd68b829391cdc489a6b4a9b122a599964f154c3338",
+        "test_metadata.tsv": "93b7903c60465a0a95567bbbc7f209e6894436051ff9cda8b11af933199cf246",
+        "test_profiles.tsv": "92c88de13187b48b24f1bf23fdfefcaba3413df5ac62c1ba015e15eb867af9b9"
+      },
+      "targets": [
+        "dm90"
+      ],
+      "target_specs": [
+        {
+          "name": "dm90",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "0",
+            "1"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "dm90"
+      ],
+      "split_sets": {
+        "dm90": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 3,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "subject",
+          "file": "splits/dm90/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "LAMPP",
+        "doi": "10.1101/2025.06.12.658885",
+        "url": "https://lampp.yassourlab.com/"
+      },
+      "external_test": {
+        "abundance": "test_profiles.tsv",
+        "metadata": "test_metadata.tsv",
+        "labels_available": false,
+        "evaluator": "LAMPP leaderboard"
+      }
+    },
+    "metaibs_ibs": {
+      "version": "0.1.1",
+      "asset": "metaibs_ibs-0.1.1.tar.gz",
+      "sha256": "446f236a417182349c842e8c7633989550155b8c5b568af38fc76ee6055dad2f",
+      "files": {
+        "metadata.tsv": "0c11384ac94202b2a8778a4aa8bba248c38bf5863051888832e1df0514328d7d",
+        "profiles.tsv": "3b7d401254d67d3228c1ddf2e2ff20fd2dc1a3efa7d4b43d24c871cf8951ec5d",
+        "provenance.yaml": "61443d89460599afa81e3e57332ace109c1ec8c5a944c26515d5d5c7e87239e5",
+        "qc.tsv": "70ecd8846a0e5c97df9ee227f48ae665bd66b3380a9d36c0e3f68157735210a1",
+        "splits/ibs/mllabiome-benchmark-v1/cv_splits.tsv": "71c9cbb71179b01ffb63d4db69301331a616afa1a40794adf7c36e7dad9e00c8",
+        "study_metadata.tsv": "197ccf568307a7e9fcee027101b56414c18ed81d27e85632cb41badd50519699"
+      },
+      "targets": [
+        "ibs"
+      ],
+      "target_specs": [
+        {
+          "name": "ibs",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "Healthy",
+            "IBS"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "ibs"
+      ],
+      "split_sets": {
+        "ibs": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 6,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "outer_group",
+          "file": "splits/ibs/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      }
+    },
+    "prime_ptsd": {
+      "version": "0.1.1",
+      "asset": "prime_ptsd-0.1.1.tar.gz",
+      "sha256": "6308e7b983f8cd427922f6e953f58545bb8bbd00e14a79dd50ded4435e955283",
+      "files": {
+        "metadata.tsv": "37d30a3143279151c8a91d53911ba1651e7f1e576978cd6d1a26573373df7865",
+        "profiles.tsv": "aff91fd0b59550c5b51739b02bbd193be9667fde31eaca2c087171d8d2ccb2af",
+        "provenance.yaml": "7dca900b73d34acc29a4bd4f28c046347170894590576be301789ba0466ef8e1",
+        "qc.tsv": "a73d02f4e4e8d9b45a68ad2817344740cc10e645cf4ac0c11416c4041df81c73",
+        "source_metadata.tsv": "4a657fc76e4f8c526019baf109ddbc6ea73a735663c132da24a289e41466fde3",
+        "splits/intervention/mllabiome-benchmark-v1/cv_splits.tsv": "0f86d3e3bbb92701a255706ac8361ac946563e170ff7353eaeffc364f785bea6"
+      },
+      "targets": [
+        "intervention"
+      ],
+      "target_specs": [
+        {
+          "name": "intervention",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "Placebo",
+            "Prebiotic"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "intervention"
+      ],
+      "split_sets": {
+        "intervention": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "repeated_nested_cv",
+          "outer_folds": 5,
+          "inner_folds": 3,
+          "repeats": 3,
+          "random_state": 42,
+          "inner_grouping": "auto",
+          "group_col": "subject_id",
+          "stratify_col": "time_point",
+          "file": "splits/intervention/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      },
+      "source": {
+        "name": "PRIME",
+        "doi": "10.1093/nar/gkaf1057",
+        "url": "https://primedb.sjtu.edu.cn"
+      }
+    }
+  }
+}
