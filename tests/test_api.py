@@ -5,7 +5,8 @@ import sys
 import tarfile
 from types import SimpleNamespace
 
-from curated_microbiota import MLLABIOME_BENCHMARK, MLLABIOME_NCV, collections
+from curated_microbiota import MLLABIOME_BENCHMARK, MLLABIOME_NCV, __data_release__, collections
+from curated_microbiota._fetch import _base
 
 
 def _sha(data: bytes) -> str:
@@ -230,3 +231,12 @@ def test_prime_ptsd_mllabiome(tmp_path, monkeypatch):
     assert evaluation.outer_folds == 5
     assert evaluation.inner_folds == 3
     assert evaluation.repeats == 3
+
+
+def test_packaged_release_manifest():
+    assert __data_release__ == "data-v0.1.1"
+    assert _base().endswith("/data-v0.1.1")
+    assert collections.brown_mdd.version == "0.1.1"
+    assert collections.brown_mdd._asset == "brown_mdd-0.1.1.tar.gz"
+    assert collections.metaibs_ibs.version == "0.1.1"
+    assert collections.prime_ptsd.version == "0.1.1"

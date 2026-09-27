@@ -129,7 +129,7 @@ class SplitSet:
             import mllabiome
         except ModuleNotFoundError as exc:
             if exc.name == "mllabiome":
-                raise ImportError("Install curated-microbiota[mllabiome]") from exc
+                raise ImportError("Install mllabiome to use this adapter") from exc
             raise
         settings = {
             "protocol": self.design.protocol,
@@ -166,7 +166,7 @@ class ExternalSet:
             import mllabiome
         except ModuleNotFoundError as exc:
             if exc.name == "mllabiome":
-                raise ImportError("Install curated-microbiota[mllabiome]") from exc
+                raise ImportError("Install mllabiome to use this adapter") from exc
             raise
         settings = {
             "abundance_path": self.abundance,
@@ -391,7 +391,7 @@ class Study:
             import mllabiome
         except ModuleNotFoundError as exc:
             if exc.name == "mllabiome":
-                raise ImportError("Install curated-microbiota[mllabiome]") from exc
+                raise ImportError("Install mllabiome to use this adapter") from exc
             raise
         return mllabiome.Data(
             abundance_path=self.abundance,

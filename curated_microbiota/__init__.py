@@ -1,4 +1,7 @@
+from importlib.metadata import PackageNotFoundError, version
+
 from . import collections
+from ._manifest import data_release
 from .study import (
     Benchmark,
     EvaluationDesign,
@@ -12,9 +15,12 @@ from .study import (
     Target,
 )
 
-from importlib.metadata import version
+try:
+    __version__ = version("curated-microbiota")
+except PackageNotFoundError:
+    __version__ = "0.1.2"
 
-__version__ = version("curated-microbiota")
+__data_release__ = data_release()
 
 __all__ = [
     "Benchmark",
@@ -29,4 +35,5 @@ __all__ = [
     "Target",
     "collections",
     "__version__",
+    "__data_release__",
 ]

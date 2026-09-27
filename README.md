@@ -16,7 +16,6 @@
 </p>
 Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for the mllabiome ecosystem.
 
-
 ```python
 from curated_microbiota.collections import brown_mdd
 
@@ -34,16 +33,12 @@ Dataset payloads are retrieved lazily, verified against SHA-256 checksums, and c
 After the first GitHub release, the package can be installed directly from the tagged source release:
 
 ```bash
-pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.0"
+uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.2"
 ```
 
-For direct construction of mllabiome objects, install the optional integration dependencies:
+The mllabiome adapters import mllabiome lazily. curated-microbiota does not depend on mllabiome, so the package can be developed, tested, and inspected independently. When using the adapters, install curated-microbiota in the same environment as mllabiome.
 
-```bash
-pip install "curated-microbiota[mllabiome]"
-```
-
-The package code is lightweight. Dataset payloads and frozen split manifests are retrieved lazily from the `data-v0.1.0` GitHub Release and verified against registered SHA-256 checksums.
+The package code is lightweight. Dataset payloads and frozen split manifests are retrieved lazily from the pinned GitHub data release declared by the packaged `release-manifest.json` and verified against registered SHA-256 checksums.
 
 ## Benchmark targets
 
