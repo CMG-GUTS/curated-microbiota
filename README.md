@@ -14,7 +14,30 @@
     >
   </a>
 </p>
+
 Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for the mllabiome ecosystem.
+
+## Benchmark at a glance
+
+`mllabiome-benchmark-v1` currently comprises **12 supervised benchmark collections**, **13 prediction tasks**, **16,230 labeled sample profiles**, and **84 independent study/domain units**. Brown MDD contributes two prediction tasks on the same 90 profiles, so those samples are counted once in the profile total.
+
+| Collection | Samples | Domains | Task(s) |
+|---|---:|---:|---|
+| Brown MDD | 90 | 1 | binary + regression |
+| PRJNA1190316 MDD | 90 | 1 | binary |
+| PRIME PTSD | 169 | 1 | binary |
+| Healthy Colombia | 88 | 1 | regression |
+| MetaIBS | 1,671 | 6 | binary LODO |
+| LAMPP SCZ | 119 | 1 | binary NCV |
+| LAMPP CRC | 983 | 8 | binary LODO |
+| LAMPP GHS | 8,033 | 54 | binary LODO |
+| LAMPP IBD | 1,886 | 2 | binary LODO |
+| LAMPP DM7 | 948 | 2 | binary LODO |
+| LAMPP DM90 | 1,461 | 3 | binary LODO |
+| IBD multiclass | 692 | 4 | 3-class LODO |
+| **Total** | **16,230** | **84** | **13 tasks** |
+
+The supervised suite contains **10 binary-classification tasks, 1 multiclass-classification task, and 2 regression tasks**. Six tasks use nested cross-validation and seven use leave-one-dataset-out evaluation. The six LAMPP collections additionally provide **2,112 hidden-label external-test profiles** for official external evaluation, for **18,342 profiles** across labeled benchmark and hidden external-test assets.
 
 ```python
 from curated_microbiota.collections import brown_mdd
@@ -33,7 +56,7 @@ Dataset payloads are retrieved lazily, verified against SHA-256 checksums, and c
 After the first GitHub release, the package can be installed directly from the tagged source release:
 
 ```bash
-uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.2"
+uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.3"
 ```
 
 The mllabiome adapters import mllabiome lazily. curated-microbiota does not depend on mllabiome, so the package can be developed, tested, and inspected independently. When using the adapters, install curated-microbiota in the same environment as mllabiome.
@@ -42,7 +65,7 @@ The package code is lightweight. Dataset payloads and frozen split manifests are
 
 ## Benchmark targets
 
-`mllabiome-benchmark-v1` currently covers binary classification and regression. No multiclass benchmark target is included in the initial release. A cohort may contribute more than one benchmark problem: Brown MDD is used for both binary classification and regression, with a separate frozen split manifest for each target.
+`mllabiome-benchmark-v1` covers binary classification, multiclass classification, and regression. A cohort may contribute more than one benchmark problem: Brown MDD is used for both binary classification and regression, with a separate frozen split manifest for each target.
 
 | Cohort | Target key | Data column | Benchmark use | Task | Outcome / classes | Internal validation | External evaluation |
 |---|---|---|---|---|---|---|---|
@@ -50,7 +73,9 @@ The package code is lightweight. Dataset payloads and frozen split manifests are
 | Brown MDD | `promis_depression` | `target_depression_severity` | Symptom-severity prediction | Regression | Continuous PROMIS depression severity | 5 outer × 3 inner × 3 repeats | — |
 | PRJNA1190316 adolescent MDD | `mdd` | `target_mdd` | Disease-status prediction | Binary classification | Control vs MDD; positive = MDD | 5 outer × 3 inner × 3 repeats | — |
 | PRIME PTSD prebiotic trial | `intervention` | `label` | Intervention-arm prediction in a longitudinal PTSD trial | Binary classification | Placebo vs prebiotic; positive = prebiotic | Subject-grouped 5 outer × 3 inner × 3 repeats; arm + time-point stratification | — |
+| Healthy Colombian men | `zung_depression` | `target_zung_depression` | Depressive-symptom severity prediction in healthy men | Regression | Continuous Zung Self-Rating Depression Scale index score | 5 outer × 3 inner × 3 repeats | — |
 | MetaIBS fecal IBS | `ibs` | `label` | Cross-study disease-status prediction | Binary classification | Healthy vs IBS; positive = IBS | LODO by source study; 3-fold study-grouped inner CV | — |
+| Cross-cohort IBD phenotype | `ibd_phenotype` | `label` | Cross-cohort IBD phenotype prediction | Multiclass classification | Control vs CD vs UC | LODO across 4 independent domains; 3-fold study-grouped inner CV | — |
 | LAMPP SCZ | `scz` | `label` | Schizophrenia phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | 5 outer × 3 inner × 3 repeats | LAMPP hidden-label test |
 | LAMPP CRC | `crc` | `label` | Colorectal-cancer phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold study-grouped inner CV | LAMPP hidden-label test |
 | LAMPP GHS | `ghs` | `label` | General-health-status prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold study-grouped inner CV | LAMPP hidden-label test |
@@ -58,7 +83,7 @@ The package code is lightweight. Dataset payloads and frozen split manifests are
 | LAMPP DM7 | `dm7` | `label` | Delivery-mode prediction at ≤7 days | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold subject-grouped inner CV | LAMPP hidden-label test |
 | LAMPP DM90 | `dm90` | `label` | Delivery-mode prediction at ≤90 days | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold subject-grouped inner CV | LAMPP hidden-label test |
 
-Healthy Colombian men is distributed as a reference/domain-shift collection and does not have a supervised benchmark target.
+Healthy Colombian men contributes a continuous depression-symptom severity regression benchmark. The original `Zung_S` values are preserved in `source_participants.tsv` and as `source_Zung_S`; the standardized benchmark column is `target_zung_depression`. No dichotomization or target imputation is applied.
 
 The same target metadata are exposed programmatically:
 
@@ -81,6 +106,7 @@ brown_mdd.target("promis_depression").problem_type
 | Healthy Colombian men | `PRJNA1000574` | 88 | — | 1 | 88 | Stool | 16S rRNA amplicon | V3–V4; Bakt_341F / Bakt_805R | Illumina MiSeq; 2×300 bp |
 | PRIME PTSD prebiotic trial | PRIME / `PRJNA1086950` | 169 | — | 1 | 75 | Stool | 16S rRNA amplicon | V4; CS1_515F / CS2_806R | Illumina MiniSeq; 2×154 bp |
 | MetaIBS fecal IBS | MetaIBS | 1,671 | — | 6 | 1,667 | Stool | 16S rRNA amplicon | Source-study dependent | Source-study dependent |
+| Cross-cohort IBD phenotype | Franzosa / Jacobs / iHMP | 692 | — | 4 | 415 | Stool | Mixed shotgun metagenomics + 16S | Jacobs V4; F515 / R806 | Illumina; source-domain dependent |
 | LAMPP SCZ | LAMPP | 119 | 52 | 1 | 119 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
 | LAMPP CRC | LAMPP | 983 | 125 | 8 | 983 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
 | LAMPP GHS | LAMPP | 8,033 | 1,140 | 54 | 8,033 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
@@ -89,6 +115,23 @@ brown_mdd.target("promis_depression").problem_type
 | LAMPP DM90 | LAMPP | 1,461 | 101 | 3 | 751 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
 
 Healthy Colombian men corresponds to BioProject `PRJNA1000574`; the paired neuroimaging dataset is OpenNeuro `ds004648`.
+
+
+## Healthy Colombia Zung regression benchmark
+
+The `healthy_colombia` collection contains 88 healthy Colombian men with one stool profile per participant. The supervised target is the continuous Zung Self-Rating Depression Scale index score supplied as `Zung_S`. All 88 participants have nonmissing scores; the observed range is 27.5 to 63.8. The benchmark treats this as a regression problem and does not convert the score to a binary depression label.
+
+The frozen evaluation design is 5 outer folds × 3 inner folds × 3 repeats with random state 42. Because there is one microbiome sample per participant, sample- and subject-level partitions coincide. The original participant metadata are retained unchanged as `source_participants.tsv`; standardized metadata retain source fields with `source_` prefixes and expose `target_zung_depression` for mllabiome.
+
+```python
+from curated_microbiota.collections import healthy_colombia
+
+DATA = healthy_colombia.mllabiome(target="zung_depression")
+EVALUATION = healthy_colombia.splits(target="zung_depression").mllabiome(
+    optimize_metric="RMSE",
+    n_jobs="auto",
+)
+```
 
 ## PRIME PTSD longitudinal benchmark
 
@@ -130,13 +173,36 @@ MetaIBS should be cited independently:
 Carcy S, Ostner J, Tran V, Menden MP, Müller CL. *MetaIBS: large-scale amplicon-based meta analysis of irritable bowel syndrome*. bioRxiv. DOI: `10.1101/2024.01.22.575775`. Source repository: `https://github.com/bio-datascience/MetaIBS`.
 
 
+
+## Cross-cohort multiclass IBD benchmark
+
+The `ibd_multiclass` collection provides a three-class phenotype benchmark with `Control`, `CD`, and `UC` outcomes. It contains 692 stool profiles from four independent evaluation domains: Franzosa PRISM (155), the independent Franzosa Netherlands validation domain combining LLDeep controls and NLIBD cases (65), Jacobs IBD families (90), and longitudinal iHMP/IBDMDB stool metagenomes (382).
+
+The Franzosa publication is split into PRISM and Netherlands validation domains because the source study explicitly used them as independent discovery and validation cohorts. Every benchmark domain contains all three outcome classes. Outer evaluation is four-fold leave-one-dataset-out. Each outer training set therefore contains three independent domains, enabling three-fold study-grouped inner model selection without partitioning repeated participants or family members.
+
+The packaged profile contains the strict cross-domain taxonomic intersection from phylum through genus. A lineage is retained only when it is observed with nonzero abundance in every outer LODO domain. The resulting shared backbone contains 5 phyla, 6 classes, 15 orders, 43 families, and 426 genera (495 features total). This prevents cohort- or assay-specific feature availability from acting as a domain identifier in the mixed shotgun/16S benchmark. No outcome-dependent filtering is performed during curation. Original metadata are retained with `source_` prefixes. For dependence-aware uncertainty, Jacobs participants are clustered by family and iHMP repeated specimens are clustered by participant.
+
+The benchmark intentionally spans substantial domain shift, including shotgun metagenomic profiles and a 16S V4 family cohort. It is intended to test cross-domain robustness of probabilistic multiclass prediction and should not be interpreted as a direct estimate of clinical diagnostic accuracy.
+
+```python
+from curated_microbiota.collections import ibd_multiclass
+
+DATA = ibd_multiclass.mllabiome(target="ibd_phenotype")
+EVALUATION = ibd_multiclass.splits(target="ibd_phenotype").mllabiome(
+    optimize_metric="log_loss",
+    n_jobs="auto",
+)
+```
+
+Primary source publications are Franzosa et al., DOI `10.1038/s41564-018-0306-4`; Jacobs et al., DOI `10.1016/j.jcmgh.2016.06.004`; and Lloyd-Price et al., DOI `10.1038/s41586-019-1237-9`.
+
 ## mllabiome benchmark
 
 `mllabiome-benchmark-v1` is the benchmark family used for the mllabiome manuscript. The benchmark identifier is shared across datasets while the evaluation design is target-specific.
 
 Single-study classification targets use three repetitions of 5-fold outer nested cross-validation with 3-fold inner cross-validation. The PRIME PTSD intervention target is longitudinal and therefore uses subject-grouped outer and inner folds, with treatment arm plus collection time point used for stratification. Regression targets use the corresponding shuffled K-fold design. Repeated observations are kept within subject whenever subject grouping is required.
 
-Multi-study benchmark targets use leave-one-dataset-out evaluation. The MetaIBS IBS target uses source study as the outer dataset and 3-fold study-grouped inner model selection. Multi-study LAMPP tasks use leave-one-dataset-out evaluation, with `study_id` defining the outer held-out dataset. CRC and GHS use 3-fold study-grouped inner model selection because subjects are unique. IBD, DM7, and DM90 use 3-fold subject-grouped inner model selection because subjects contribute repeated observations. The complete outer and inner assignments are distributed with each target and are not regenerated during manuscript analyses.
+Multi-study benchmark targets use leave-one-dataset-out evaluation. The MetaIBS IBS target uses source study as the outer dataset and 3-fold study-grouped inner model selection. The multiclass IBD phenotype target uses four independent source domains as outer datasets and 3-fold study-grouped inner model selection. Multi-study LAMPP tasks use leave-one-dataset-out evaluation, with `study_id` defining the outer held-out dataset. CRC and GHS use 3-fold study-grouped inner model selection because subjects are unique. IBD, DM7, and DM90 use 3-fold subject-grouped inner model selection because subjects contribute repeated observations. The complete outer and inner assignments are distributed with each target and are not regenerated during manuscript analyses.
 
 The split-manifest schema fingerprints sample identifiers, targets, outer dataset assignments, subject identities, and the evaluation design. mllabiome verifies the manifest against the loaded analytical cohort before fitting models.
 
@@ -198,4 +264,4 @@ print(study.external_test.labels_available)
 
 Accessing a study file, creating an `mllabiome.Data` object, resolving a benchmark split set, or resolving a LAMPP external test downloads only the selected study archive. Every archive and extracted file is verified against the checksums registered by the Python package.
 
-The default source is the `curated-microbiota/collections` GitHub Release `data-v0.5.0`. `CURATED_MICROBIOTA_RELEASE_URL` and `CURATED_MICROBIOTA_CACHE` can override the release source and cache location.
+The default source is the pinned GitHub data release declared by the packaged `release-manifest.json`. `CURATED_MICROBIOTA_RELEASE_URL` and `CURATED_MICROBIOTA_CACHE` can override the release source and cache location.

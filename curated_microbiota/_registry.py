@@ -125,7 +125,7 @@ healthy_colombia = Study(
     accession="PRJNA1000574",
     condition="healthy",
     assay="16s_v3_v4",
-    role="reference",
+    role="benchmark",
     status="ready",
     samples=88,
     features=670,
@@ -142,6 +142,17 @@ healthy_colombia = Study(
         layout="paired-end",
         read_length="2x300 bp",
     ),
+    confounders=("age",),
+    _targets=(_Target("zung_depression", "target_zung_depression", "regression"),),
+    _splits=(
+        _Split(
+            "zung_depression",
+            MLLABIOME_BENCHMARK,
+            MLLABIOME_NCV,
+            "splits/zung_depression/mllabiome-benchmark-v1/cv_splits.tsv",
+        ),
+    ),
+    _default="zung_depression",
 )
 
 
@@ -223,6 +234,56 @@ metaibs_ibs = Study(
     _format="metaphlan_tsv",
     _sample_id="sampleId",
     _subject="subject_id",
+    _group="study_id",
+)
+
+
+ibd_multiclass = Study(
+    name="ibd_multiclass",
+    title="Cross-cohort multiclass IBD phenotype",
+    **_release("ibd_multiclass"),
+    accession="PRJNA400072+PRJNA324147+PRJNA398089",
+    condition="inflammatory_bowel_disease",
+    assay="mixed_shotgun_16s",
+    role="benchmark",
+    status="ready",
+    samples=692,
+    features=495,
+    population="Controls and participants with Crohn's disease or ulcerative colitis across four independent stool microbiome domains",
+    country="United States / Netherlands",
+    sample_type="stool",
+    sequencing=Sequencing(
+        assay="Mixed shotgun metagenomics and 16S rRNA amplicon",
+        region="V4 for Jacobs; not applicable to shotgun cohorts",
+        forward_primer="F515 for Jacobs",
+        reverse_primer="R806 for Jacobs",
+        platform="Illumina",
+        instrument="Source-cohort dependent",
+        layout="Source-cohort dependent",
+    ),
+    confounders=("age", "sex", "site"),
+    _targets=(
+        _Target(
+            "ibd_phenotype",
+            "label",
+            "classification",
+            None,
+            ("Control", "CD", "UC"),
+        ),
+    ),
+    _splits=(
+        _Split(
+            "ibd_phenotype",
+            MLLABIOME_BENCHMARK,
+            EvaluationDesign("lodo", 4, 3, 1, 42, "outer_group"),
+            "splits/ibd_phenotype/mllabiome-benchmark-v1/cv_splits.tsv",
+        ),
+    ),
+    _default="ibd_phenotype",
+    _abundance="profiles.tsv",
+    _format="metaphlan_tsv",
+    _sample_id="sampleId",
+    _subject="dependence_cluster_id",
     _group="study_id",
 )
 
@@ -339,6 +400,7 @@ studies = (
     prjna1190316,
     healthy_colombia,
     metaibs_ibs,
+    ibd_multiclass,
     prime_ptsd,
     lampp_scz,
     lampp_crc,

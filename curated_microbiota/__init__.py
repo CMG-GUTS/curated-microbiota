@@ -18,7 +18,7 @@ from .study import (
 try:
     __version__ = version("curated-microbiota")
 except PackageNotFoundError:
-    __version__ = "0.1.2"
+    __version__ = "0.1.3"
 
 __data_release__ = data_release()
 

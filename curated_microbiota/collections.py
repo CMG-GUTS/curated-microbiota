@@ -1,6 +1,7 @@
 from ._registry import (
     brown_mdd,
     healthy_colombia,
+    ibd_multiclass,
     lampp_crc,
     metaibs_ibs,
     prime_ptsd,
@@ -42,6 +43,7 @@ __all__ = [
     "available",
     "brown_mdd",
     "healthy_colombia",
+    "ibd_multiclass",
     "lampp_crc",
     "metaibs_ibs",
     "prime_ptsd",

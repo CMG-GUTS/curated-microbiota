@@ -32,7 +32,9 @@ def test_collections():
     assert collections.brown_mdd.target("mdd").column == "target_mdd"
     assert collections.brown_mdd.target("promis_depression").column == "target_depression_severity"
     assert collections.prjna1190316.benchmark_targets == ("mdd",)
-    assert collections.healthy_colombia.benchmark_targets == ()
+    assert collections.healthy_colombia.benchmark_targets == ("zung_depression",)
+    assert collections.healthy_colombia.target().problem_type == "regression"
+    assert collections.healthy_colombia.splits().design.repeats == 3
     assert collections.healthy_colombia.accession == "PRJNA1000574"
     assert collections.healthy_colombia.sequencing.region == "V3-V4"
     assert MLLABIOME_BENCHMARK.id == "mllabiome-benchmark-v1"
@@ -41,7 +43,9 @@ def test_collections():
     assert MLLABIOME_NCV.repeats == 3
     lampp = {study.name for study in collections.available(role="benchmark")}
     assert lampp == {
+        "healthy_colombia",
         "metaibs_ibs",
+        "ibd_multiclass",
         "prime_ptsd",
         "lampp_scz",
         "lampp_crc",
@@ -51,6 +55,13 @@ def test_collections():
         "lampp_dm90",
     }
     assert collections.metaibs_ibs.splits().protocol == "lodo"
+    assert collections.ibd_multiclass.target().problem_type == "multiclass_classification"
+    assert collections.ibd_multiclass.target().class_labels == ("Control", "CD", "UC")
+    assert collections.ibd_multiclass.splits().protocol == "lodo"
+    assert collections.ibd_multiclass.splits().design.outer_folds == 4
+    assert collections.ibd_multiclass.splits().design.inner_folds == 3
+    assert collections.ibd_multiclass.splits().design.inner_grouping == "outer_group"
+    assert collections.available(problem_type="multiclass_classification") == (collections.ibd_multiclass,)
     assert collections.metaibs_ibs.splits().design.outer_folds == 6
     assert collections.metaibs_ibs.splits().design.inner_grouping == "outer_group"
     assert collections.metaibs_ibs.source is not None
@@ -61,7 +72,7 @@ def test_collections():
     assert collections.prime_ptsd.source.name == "PRIME"
     assert collections.prime_ptsd.samples == 169
     assert collections.prime_ptsd.target().problem_type == "binary_classification"
-    assert collections.available(problem_type="regression") == (collections.brown_mdd,)
+    assert collections.available(problem_type="regression") == (collections.brown_mdd, collections.healthy_colombia)
     assert collections.lampp_scz.splits().protocol == "repeated_nested_cv"
     assert collections.lampp_crc.splits().protocol == "lodo"
     assert collections.lampp_ghs.splits().design.inner_grouping == "outer_group"
@@ -234,9 +245,13 @@ def test_prime_ptsd_mllabiome(tmp_path, monkeypatch):
 
 
 def test_packaged_release_manifest():
-    assert __data_release__ == "data-v0.1.1"
-    assert _base().endswith("/data-v0.1.1")
+    assert __data_release__ == "data-v0.1.3"
+    assert _base().endswith("/data-v0.1.3")
     assert collections.brown_mdd.version == "0.1.1"
     assert collections.brown_mdd._asset == "brown_mdd-0.1.1.tar.gz"
     assert collections.metaibs_ibs.version == "0.1.1"
     assert collections.prime_ptsd.version == "0.1.1"
+    assert collections.healthy_colombia.version == "0.1.3"
+    assert collections.healthy_colombia._asset == "healthy_colombia-0.1.3.tar.gz"
+    assert collections.ibd_multiclass.version == "0.1.0"
+    assert collections.ibd_multiclass._asset == "ibd_multiclass-0.1.0.tar.gz"

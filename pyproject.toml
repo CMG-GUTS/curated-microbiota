@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "curated-microbiota"
-version = "0.1.2"
+version = "0.1.3"
 description = "Versioned, analysis-ready microbiota collections with lazy retrieval"
 readme = "README.md"
 license = "MIT"
