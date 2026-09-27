@@ -7,3 +7,8 @@ dist/
 .venv/
 venv/
 .DS_Store
+
+*.tar.gz
+SHA256SUMS
+RELEASE.md
+release-manifest.json

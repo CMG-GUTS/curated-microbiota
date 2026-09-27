@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 176 32" role="img" aria-label="mll:curated-microbiota">
+  <rect width="176" height="32" rx="4" fill="#ffffff"/>
+  <text x="88" y="22" font-family="Inter, system-ui, -apple-system, sans-serif" font-size="13"
+        font-weight="700" fill="#0f172a" text-anchor="middle"
+        letter-spacing="-0.3">mll:curated-microbiota</text>
+</svg>
