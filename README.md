@@ -1,8 +1,7 @@
 <p>
   <img
     src="https://raw.githubusercontent.com/CMG-GUTS/curated-microbiota/main/assets/favicon-curated-microbiota-oneline.svg"
-    width="350"
-    height="270"
+    width="270"
     alt="mllabiome curated microbiota icon"
   >
   &nbsp;&nbsp;&nbsp;
