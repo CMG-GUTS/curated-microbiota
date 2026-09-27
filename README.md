@@ -8,7 +8,7 @@
   <a href="https://cmg-guts.github.io/mllabiome/">
     <img
       src="https://raw.githubusercontent.com/CMG-GUTS/curated-microbiota/main/assets/mllabiome-abundance-table.svg"
-      width="270"
+      width="150"
       align="right"
       alt="abundance matrix"
     >
