@@ -238,6 +238,47 @@ metaibs_ibs = Study(
 )
 
 
+crc_multicohort = Study(
+    name="crc_multicohort",
+    title="Cross-cohort colorectal cancer",
+    **_release("crc_multicohort"),
+    accession="multi-study:crc-17-cohort",
+    condition="colorectal_cancer",
+    assay="shotgun_metagenomics",
+    role="benchmark",
+    status="ready",
+    samples=2941,
+    features=9239,
+    population="Colorectal cancer cases and controls across 17 independent stool metagenomic cohorts",
+    country="Multi-country",
+    sample_type="stool",
+    sequencing=Sequencing(
+        assay="Shotgun metagenomics",
+        platform="Source-study dependent",
+        instrument="Source-study dependent",
+        layout="Source-study dependent",
+    ),
+    _targets=(
+        _Target("crc", "label", "classification", 1, ("Control", "CRC"), ((0, 0), (1, 1))),
+    ),
+    _splits=(
+        _Split(
+            "crc",
+            MLLABIOME_BENCHMARK,
+            EvaluationDesign("lodo", 17, 3, 1, 42, "outer_group"),
+            "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv",
+        ),
+    ),
+    _default="crc",
+    _abundance="profiles.tsv",
+    _feature_metadata=None,
+    _format="metaphlan_tsv",
+    _sample_id="sampleId",
+    _subject="subject_id",
+    _group="study_id",
+)
+
+
 ibd_multiclass = Study(
     name="ibd_multiclass",
     title="Cross-cohort multiclass IBD phenotype",
@@ -400,6 +441,7 @@ studies = (
     prjna1190316,
     healthy_colombia,
     metaibs_ibs,
+    crc_multicohort,
     ibd_multiclass,
     prime_ptsd,
     lampp_scz,

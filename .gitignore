@@ -11,3 +11,6 @@ venv/
 *.tar.gz
 SHA256SUMS
 RELEASE.md
+
+curated-microbiota-data-v0.1.3/
+release_assets

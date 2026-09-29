@@ -45,6 +45,7 @@ def test_collections():
     assert lampp == {
         "healthy_colombia",
         "metaibs_ibs",
+        "crc_multicohort",
         "ibd_multiclass",
         "prime_ptsd",
         "lampp_scz",
@@ -64,6 +65,16 @@ def test_collections():
     assert collections.available(problem_type="multiclass_classification") == (collections.ibd_multiclass,)
     assert collections.metaibs_ibs.splits().design.outer_folds == 6
     assert collections.metaibs_ibs.splits().design.inner_grouping == "outer_group"
+    assert collections.crc_multicohort.target().problem_type == "binary_classification"
+    assert collections.crc_multicohort.target().class_labels == ("Control", "CRC")
+    assert collections.crc_multicohort.target().positive_class == 1
+    assert collections.crc_multicohort.samples == 2941
+    assert collections.crc_multicohort.features == 9239
+    assert collections.crc_multicohort.splits().protocol == "lodo"
+    assert collections.crc_multicohort.splits().design.outer_folds == 17
+    assert collections.crc_multicohort.splits().design.inner_folds == 3
+    assert collections.crc_multicohort.splits().design.inner_grouping == "outer_group"
+    assert collections.crc_multicohort.source is None
     assert collections.metaibs_ibs.source is not None
     assert collections.metaibs_ibs.source.name == "MetaIBS"
     assert collections.prime_ptsd.splits().protocol == "repeated_nested_cv"
@@ -245,11 +256,13 @@ def test_prime_ptsd_mllabiome(tmp_path, monkeypatch):
 
 
 def test_packaged_release_manifest():
-    assert __data_release__ == "data-v0.1.3"
-    assert _base().endswith("/data-v0.1.3")
+    assert __data_release__ == "data-v0.1.4"
+    assert _base().endswith("/data-v0.1.4")
     assert collections.brown_mdd.version == "0.1.1"
     assert collections.brown_mdd._asset == "brown_mdd-0.1.1.tar.gz"
     assert collections.metaibs_ibs.version == "0.1.1"
+    assert collections.crc_multicohort.version == "0.1.0"
+    assert collections.crc_multicohort._asset == "crc_multicohort-0.1.0.tar.gz"
     assert collections.prime_ptsd.version == "0.1.1"
     assert collections.healthy_colombia.version == "0.1.3"
     assert collections.healthy_colombia._asset == "healthy_colombia-0.1.3.tar.gz"

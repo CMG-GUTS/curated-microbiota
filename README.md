@@ -19,7 +19,7 @@ Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for
 
 ## Benchmark at a glance
 
-`mllabiome-benchmark-v1` currently comprises **12 supervised benchmark collections**, **13 prediction tasks**, **16,230 labeled sample profiles**, and **84 independent study/domain units**. Brown MDD contributes two prediction tasks on the same 90 profiles, so those samples are counted once in the profile total.
+`mllabiome-benchmark-v1` currently comprises **13 supervised benchmark collections**, **14 prediction tasks**, **19,171 labeled sample profiles**, and **101 independent study/domain units**. Brown MDD contributes two prediction tasks on the same 90 profiles, so those samples are counted once in the profile total.
 
 | Collection | Samples | Domains | Task(s) |
 |---|---:|---:|---|
@@ -28,6 +28,7 @@ Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for
 | PRIME PTSD | 169 | 1 | binary |
 | Healthy Colombia | 88 | 1 | regression |
 | MetaIBS | 1,671 | 6 | binary LODO |
+| CRC multicohort | 2,941 | 17 | binary LODO |
 | LAMPP SCZ | 119 | 1 | binary NCV |
 | LAMPP CRC | 983 | 8 | binary LODO |
 | LAMPP GHS | 8,033 | 54 | binary LODO |
@@ -35,9 +36,9 @@ Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for
 | LAMPP DM7 | 948 | 2 | binary LODO |
 | LAMPP DM90 | 1,461 | 3 | binary LODO |
 | IBD multiclass | 692 | 4 | 3-class LODO |
-| **Total** | **16,230** | **84** | **13 tasks** |
+| **Total** | **19,171** | **101** | **14 tasks** |
 
-The supervised suite contains **10 binary-classification tasks, 1 multiclass-classification task, and 2 regression tasks**. Six tasks use nested cross-validation and seven use leave-one-dataset-out evaluation. The six LAMPP collections additionally provide **2,112 hidden-label external-test profiles** for official external evaluation, for **18,342 profiles** across labeled benchmark and hidden external-test assets.
+The supervised suite contains **11 binary-classification tasks, 1 multiclass-classification task, and 2 regression tasks**. Six tasks use nested cross-validation and eight use leave-one-dataset-out evaluation. The six LAMPP collections additionally provide **2,112 hidden-label external-test profiles** for official external evaluation, for **21,283 profiles** across labeled benchmark and hidden external-test assets.
 
 ```python
 from curated_microbiota.collections import brown_mdd
@@ -56,7 +57,7 @@ Dataset payloads are retrieved lazily, verified against SHA-256 checksums, and c
 After the first GitHub release, the package can be installed directly from the tagged source release:
 
 ```bash
-uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.3"
+uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.4"
 ```
 
 The mllabiome adapters import mllabiome lazily. curated-microbiota does not depend on mllabiome, so the package can be developed, tested, and inspected independently. When using the adapters, install curated-microbiota in the same environment as mllabiome.
@@ -75,6 +76,7 @@ The package code is lightweight. Dataset payloads and frozen split manifests are
 | PRIME PTSD prebiotic trial | `intervention` | `label` | Intervention-arm prediction in a longitudinal PTSD trial | Binary classification | Placebo vs prebiotic; positive = prebiotic | Subject-grouped 5 outer × 3 inner × 3 repeats; arm + time-point stratification | — |
 | Healthy Colombian men | `zung_depression` | `target_zung_depression` | Depressive-symptom severity prediction in healthy men | Regression | Continuous Zung Self-Rating Depression Scale index score | 5 outer × 3 inner × 3 repeats | — |
 | MetaIBS fecal IBS | `ibs` | `label` | Cross-study disease-status prediction | Binary classification | Healthy vs IBS; positive = IBS | LODO by source study; 3-fold study-grouped inner CV | — |
+| CRC multicohort | `crc` | `label` | Cross-cohort colorectal-cancer phenotype prediction | Binary classification | Control vs CRC; positive = CRC | LODO across 17 source cohorts; 3-fold study-grouped inner CV | — |
 | Cross-cohort IBD phenotype | `ibd_phenotype` | `label` | Cross-cohort IBD phenotype prediction | Multiclass classification | Control vs CD vs UC | LODO across 4 independent domains; 3-fold study-grouped inner CV | — |
 | LAMPP SCZ | `scz` | `label` | Schizophrenia phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | 5 outer × 3 inner × 3 repeats | LAMPP hidden-label test |
 | LAMPP CRC | `crc` | `label` | Colorectal-cancer phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold study-grouped inner CV | LAMPP hidden-label test |
@@ -106,6 +108,7 @@ brown_mdd.target("promis_depression").problem_type
 | Healthy Colombian men | `PRJNA1000574` | 88 | — | 1 | 88 | Stool | 16S rRNA amplicon | V3–V4; Bakt_341F / Bakt_805R | Illumina MiSeq; 2×300 bp |
 | PRIME PTSD prebiotic trial | PRIME / `PRJNA1086950` | 169 | — | 1 | 75 | Stool | 16S rRNA amplicon | V4; CS1_515F / CS2_806R | Illumina MiniSeq; 2×154 bp |
 | MetaIBS fecal IBS | MetaIBS | 1,671 | — | 6 | 1,667 | Stool | 16S rRNA amplicon | Source-study dependent | Source-study dependent |
+| CRC multicohort | 17-cohort CRC benchmark | 2,941 | — | 17 | 2,941 | Stool | Shotgun metagenomics | — | Source-study dependent |
 | Cross-cohort IBD phenotype | Franzosa / Jacobs / iHMP | 692 | — | 4 | 415 | Stool | Mixed shotgun metagenomics + 16S | Jacobs V4; F515 / R806 | Illumina; source-domain dependent |
 | LAMPP SCZ | LAMPP | 119 | 52 | 1 | 119 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
 | LAMPP CRC | LAMPP | 983 | 125 | 8 | 983 | Gut metagenome | Shotgun metagenomics | — | Source-study dependent |
@@ -174,6 +177,25 @@ Carcy S, Ostner J, Tran V, Menden MP, Müller CL. *MetaIBS: large-scale amplicon
 
 
 
+## CRC multicohort benchmark
+
+The `crc_multicohort` collection provides a binary colorectal-cancer benchmark with 2,941 stool shotgun-metagenomic profiles from 17 independent source cohorts. The target is CRC versus control, with 1,422 CRC samples and 1,519 controls. The 648 adenoma samples present in the source metadata are excluded from this binary target and are not relabeled as either class.
+
+The packaged abundance matrix is built exclusively from the supplied `*_adapted.tsv` MetaPhlAn4 profiles. All 9,239 adapted taxonomic rows are retained, from domain through terminal SGB/strain-level rows, so taxonomic-rank selection remains part of the downstream modeling configuration. The supplied MetaPhlAn relative abundances remain on their original percentage scale. Curation applies no scaling, renormalization, log or CLR transform, prevalence filter, or outcome-dependent feature filter. Features absent from a source cohort are represented as zero when the cohort matrices are union-aligned.
+
+Outer evaluation is 17-fold leave-one-dataset-out with `study_id` defining the held-out cohort. Inner model selection uses 3-fold stratified group cross-validation over the remaining study domains. The distributed schema-v3 split manifest fixes sample identities, subjects, outer domains, inner assignments, and evaluation-plan signatures. Two outer domains contain CRC only after adenoma exclusion; fold-specific AUROC is therefore undefined for those held-out cohorts, while pooled out-of-domain predictions remain usable for metrics requiring both classes.
+
+```python
+from curated_microbiota.collections import crc_multicohort
+
+DATA = crc_multicohort.mllabiome()
+EVALUATION = crc_multicohort.splits().mllabiome(
+    optimize_metric="log_loss",
+    n_jobs="auto",
+)
+```
+
+
 ## Cross-cohort multiclass IBD benchmark
 
 The `ibd_multiclass` collection provides a three-class phenotype benchmark with `Control`, `CD`, and `UC` outcomes. It contains 692 stool profiles from four independent evaluation domains: Franzosa PRISM (155), the independent Franzosa Netherlands validation domain combining LLDeep controls and NLIBD cases (65), Jacobs IBD families (90), and longitudinal iHMP/IBDMDB stool metagenomes (382).
@@ -202,11 +224,11 @@ Primary source publications are Franzosa et al., DOI `10.1038/s41564-018-0306-4`
 
 Single-study classification targets use three repetitions of 5-fold outer nested cross-validation with 3-fold inner cross-validation. The PRIME PTSD intervention target is longitudinal and therefore uses subject-grouped outer and inner folds, with treatment arm plus collection time point used for stratification. Regression targets use the corresponding shuffled K-fold design. Repeated observations are kept within subject whenever subject grouping is required.
 
-Multi-study benchmark targets use leave-one-dataset-out evaluation. The MetaIBS IBS target uses source study as the outer dataset and 3-fold study-grouped inner model selection. The multiclass IBD phenotype target uses four independent source domains as outer datasets and 3-fold study-grouped inner model selection. Multi-study LAMPP tasks use leave-one-dataset-out evaluation, with `study_id` defining the outer held-out dataset. CRC and GHS use 3-fold study-grouped inner model selection because subjects are unique. IBD, DM7, and DM90 use 3-fold subject-grouped inner model selection because subjects contribute repeated observations. The complete outer and inner assignments are distributed with each target and are not regenerated during manuscript analyses.
+Multi-study benchmark targets use leave-one-dataset-out evaluation. The MetaIBS IBS target uses source study as the outer dataset and 3-fold study-grouped inner model selection. The CRC multicohort target uses 17 source cohorts as outer datasets and 3-fold study-grouped inner model selection. The multiclass IBD phenotype target uses four independent source domains as outer datasets and 3-fold study-grouped inner model selection. Multi-study LAMPP tasks use leave-one-dataset-out evaluation, with `study_id` defining the outer held-out dataset. CRC and GHS use 3-fold study-grouped inner model selection because subjects are unique. IBD, DM7, and DM90 use 3-fold subject-grouped inner model selection because subjects contribute repeated observations. The complete outer and inner assignments are distributed with each target and are not regenerated during manuscript analyses.
 
 The split-manifest schema fingerprints sample identifiers, targets, outer dataset assignments, subject identities, and the evaluation design. mllabiome verifies the manifest against the loaded analytical cohort before fitting models.
 
-For GHS, some source studies contain only one class. Such studies remain valid LODO test domains, but fold-specific AUROC is undefined for those domains. Pooled LODO out-of-dataset predictions remain available for metrics that require both classes. Task-level QC is distributed in each LAMPP asset.
+For GHS and CRC multicohort, some source studies contain only one class. Such studies remain valid LODO test domains, but fold-specific AUROC is undefined for those domains. Pooled LODO out-of-dataset predictions remain available for metrics that require both classes. Task-level QC is distributed in each LAMPP asset.
 
 ```python
 from curated_microbiota.collections import lampp_ibd

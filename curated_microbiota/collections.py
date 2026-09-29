@@ -1,5 +1,6 @@
 from ._registry import (
     brown_mdd,
+    crc_multicohort,
     healthy_colombia,
     ibd_multiclass,
     lampp_crc,
@@ -42,6 +43,7 @@ def available(
 __all__ = [
     "available",
     "brown_mdd",
+    "crc_multicohort",
     "healthy_colombia",
     "ibd_multiclass",
     "lampp_crc",

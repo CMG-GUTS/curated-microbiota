@@ -1,5 +1,5 @@
 {
-  "release": "data-v0.1.3",
+  "release": "data-v0.1.4",
   "benchmark": {
     "name": "mllabiome-benchmark",
     "version": 1
@@ -529,6 +529,50 @@
           "random_state": 42,
           "inner_grouping": "outer_group",
           "file": "splits/ibs/mllabiome-benchmark-v1/cv_splits.tsv"
+        }
+      }
+    },
+    "crc_multicohort": {
+      "version": "0.1.0",
+      "asset": "crc_multicohort-0.1.0.tar.gz",
+      "sha256": "8b6fe3afc012c07b7eb051bb7c0b7b324ee606147d5e8199366214d6aa2d1a75",
+      "files": {
+        "metadata.tsv": "beeaaa77bde64f3a672574703c7543ae519466585bbc05cef5c38ad0fbcbfb06",
+        "profiles.tsv": "27d1d2306fc0a2f8232612588251c093fb88d85d42fcffda6696e00773cf8a10",
+        "provenance.yaml": "2a943f9ef706890cee5235079885aecee234039c85ecda718d7922881110bdfd",
+        "qc.tsv": "10dbc8dbc0b557f423cd933952518eee6038c442e9c62bfc48ff821b50d72555",
+        "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv": "a7573333b0420c8819f8a609248bfe0c8107b990503991a3db45058a0dfd637f",
+        "study_metadata.tsv": "361175a5abafbe40b8596ce058bc8114995fa875a6d8cbafdbdf35cf142e0127"
+      },
+      "targets": [
+        "crc"
+      ],
+      "target_specs": [
+        {
+          "name": "crc",
+          "column": "label",
+          "task": "classification",
+          "problem_type": "binary_classification",
+          "class_labels": [
+            "Control",
+            "CRC"
+          ],
+          "positive_class": 1
+        }
+      ],
+      "benchmark_targets": [
+        "crc"
+      ],
+      "split_sets": {
+        "crc": {
+          "benchmark": "mllabiome-benchmark-v1",
+          "protocol": "lodo",
+          "outer_folds": 17,
+          "inner_folds": 3,
+          "repeats": 1,
+          "random_state": 42,
+          "inner_grouping": "outer_group",
+          "file": "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv"
         }
       }
     },
