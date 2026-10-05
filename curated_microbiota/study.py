@@ -65,12 +65,12 @@ class EvaluationDesign:
     inner_grouping: str = "auto"
 
 
-MLLABIOME_BENCHMARK = Benchmark(name="mllabiome-benchmark", version=1)
+MLLABIOME_BENCHMARK = Benchmark(name="mllabiome-benchmark", version=2)
 MLLABIOME_NCV = EvaluationDesign(
     protocol="repeated_nested_cv",
     outer_folds=5,
     inner_folds=3,
-    repeats=3,
+    repeats=2,
     random_state=42,
     inner_grouping="auto",
 )

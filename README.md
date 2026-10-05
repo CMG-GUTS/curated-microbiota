@@ -19,7 +19,7 @@ Versioned, analysis-ready microbiota cohorts and frozen benchmark partitions for
 
 ## Benchmark at a glance
 
-`mllabiome-benchmark-v1` currently comprises **13 supervised benchmark collections**, **14 prediction tasks**, **19,171 labeled sample profiles**, and **101 independent study/domain units**. Brown MDD contributes two prediction tasks on the same 90 profiles, so those samples are counted once in the profile total.
+`mllabiome-benchmark-v2` currently comprises **13 supervised benchmark collections**, **14 prediction tasks**, **19,171 labeled sample profiles**, and **101 independent study/domain units**. Brown MDD contributes two prediction tasks on the same 90 profiles, so those samples are counted once in the profile total.
 
 | Collection | Samples | Domains | Task(s) |
 |---|---:|---:|---|
@@ -57,7 +57,7 @@ Dataset payloads are retrieved lazily, verified against SHA-256 checksums, and c
 After the first GitHub release, the package can be installed directly from the tagged source release:
 
 ```bash
-uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.1.4"
+uv pip install "git+https://github.com/CMG-GUTS/curated-microbiota.git@v0.2.0"
 ```
 
 The mllabiome adapters import mllabiome lazily. curated-microbiota does not depend on mllabiome, so the package can be developed, tested, and inspected independently. When using the adapters, install curated-microbiota in the same environment as mllabiome.
@@ -66,19 +66,19 @@ The package code is lightweight. Dataset payloads and frozen split manifests are
 
 ## Benchmark targets
 
-`mllabiome-benchmark-v1` covers binary classification, multiclass classification, and regression. A cohort may contribute more than one benchmark problem: Brown MDD is used for both binary classification and regression, with a separate frozen split manifest for each target.
+`mllabiome-benchmark-v2` covers binary classification, multiclass classification, and regression. A cohort may contribute more than one benchmark problem: Brown MDD is used for both binary classification and regression, with a separate frozen split manifest for each target.
 
 | Cohort | Target key | Data column | Benchmark use | Task | Outcome / classes | Internal validation | External evaluation |
 |---|---|---|---|---|---|---|---|
-| Brown MDD | `mdd` | `target_mdd` | Disease-status prediction | Binary classification | Control vs MDD; positive = MDD | 5 outer × 3 inner × 3 repeats | — |
-| Brown MDD | `promis_depression` | `target_depression_severity` | Symptom-severity prediction | Regression | Continuous PROMIS depression severity | 5 outer × 3 inner × 3 repeats | — |
-| PRJNA1190316 adolescent MDD | `mdd` | `target_mdd` | Disease-status prediction | Binary classification | Control vs MDD; positive = MDD | 5 outer × 3 inner × 3 repeats | — |
-| PRIME PTSD prebiotic trial | `intervention` | `label` | Intervention-arm prediction in a longitudinal PTSD trial | Binary classification | Placebo vs prebiotic; positive = prebiotic | Subject-grouped 5 outer × 3 inner × 3 repeats; arm + time-point stratification | — |
-| Healthy Colombian men | `zung_depression` | `target_zung_depression` | Depressive-symptom severity prediction in healthy men | Regression | Continuous Zung Self-Rating Depression Scale index score | 5 outer × 3 inner × 3 repeats | — |
+| Brown MDD | `mdd` | `target_mdd` | Disease-status prediction | Binary classification | Control vs MDD; positive = MDD | 5 outer × 3 inner × 2 repeats | — |
+| Brown MDD | `promis_depression` | `target_depression_severity` | Symptom-severity prediction | Regression | Continuous PROMIS depression severity | 5 outer × 3 inner × 2 repeats | — |
+| PRJNA1190316 adolescent MDD | `mdd` | `target_mdd` | Disease-status prediction | Binary classification | Control vs MDD; positive = MDD | 5 outer × 3 inner × 2 repeats | — |
+| PRIME PTSD prebiotic trial | `intervention` | `label` | Intervention-arm prediction in a longitudinal PTSD trial | Binary classification | Placebo vs prebiotic; positive = prebiotic | Subject-grouped 5 outer × 3 inner × 2 repeats; arm + time-point stratification | — |
+| Healthy Colombian men | `zung_depression` | `target_zung_depression` | Depressive-symptom severity prediction in healthy men | Regression | Continuous Zung Self-Rating Depression Scale index score | 5 outer × 3 inner × 2 repeats | — |
 | MetaIBS fecal IBS | `ibs` | `label` | Cross-study disease-status prediction | Binary classification | Healthy vs IBS; positive = IBS | LODO by source study; 3-fold study-grouped inner CV | — |
 | CRC multicohort | `crc` | `label` | Cross-cohort colorectal-cancer phenotype prediction | Binary classification | Control vs CRC; positive = CRC | LODO across 17 source cohorts; 3-fold study-grouped inner CV | — |
 | Cross-cohort IBD phenotype | `ibd_phenotype` | `label` | Cross-cohort IBD phenotype prediction | Multiclass classification | Control vs CD vs UC | LODO across 4 independent domains; 3-fold study-grouped inner CV | — |
-| LAMPP SCZ | `scz` | `label` | Schizophrenia phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | 5 outer × 3 inner × 3 repeats | LAMPP hidden-label test |
+| LAMPP SCZ | `scz` | `label` | Schizophrenia phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | 5 outer × 3 inner × 2 repeats | LAMPP hidden-label test |
 | LAMPP CRC | `crc` | `label` | Colorectal-cancer phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold study-grouped inner CV | LAMPP hidden-label test |
 | LAMPP GHS | `ghs` | `label` | General-health-status prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold study-grouped inner CV | LAMPP hidden-label test |
 | LAMPP IBD | `ibd` | `label` | Inflammatory-bowel-disease phenotype prediction | Binary classification | LAMPP labels 0/1; positive = 1 | LODO by source study; 3-fold subject-grouped inner CV | LAMPP hidden-label test |
@@ -124,7 +124,7 @@ Healthy Colombian men corresponds to BioProject `PRJNA1000574`; the paired neuro
 
 The `healthy_colombia` collection contains 88 healthy Colombian men with one stool profile per participant. The supervised target is the continuous Zung Self-Rating Depression Scale index score supplied as `Zung_S`. All 88 participants have nonmissing scores; the observed range is 27.5 to 63.8. The benchmark treats this as a regression problem and does not convert the score to a binary depression label.
 
-The frozen evaluation design is 5 outer folds × 3 inner folds × 3 repeats with random state 42. Because there is one microbiome sample per participant, sample- and subject-level partitions coincide. The original participant metadata are retained unchanged as `source_participants.tsv`; standardized metadata retain source fields with `source_` prefixes and expose `target_zung_depression` for mllabiome.
+The frozen evaluation design is 5 outer folds × 3 inner folds × 2 repeats with random state 42. Because there is one microbiome sample per participant, sample- and subject-level partitions coincide. The original participant metadata are retained unchanged as `source_participants.tsv`; standardized metadata retain source fields with `source_` prefixes and expose `target_zung_depression` for mllabiome.
 
 ```python
 from curated_microbiota.collections import healthy_colombia
@@ -142,7 +142,7 @@ The `prime_ptsd` collection is derived from the SILVA observed-abundance downloa
 
 All participants are annotated with PTSD. The supervised target is therefore not PTSD diagnosis; it is randomized intervention arm, with prebiotic encoded as the positive class and placebo as the negative class. The original publication reports 70 participants in the final clinical analysis, whereas the public PRIME/SRA-derived sequencing subset contains 75 participant identifiers. curated-microbiota preserves the public PRIME sample set rather than attempting to reconstruct an unverified clinical-analysis subset.
 
-Because participants contribute repeated longitudinal specimens, the benchmark uses subject-grouped repeated nested cross-validation. No participant can occur in both train and test or inner train and validation partitions. The frozen folds additionally stratify on treatment arm and collection time point to stabilize the longitudinal composition across folds. The design is 5 outer folds, 3 inner folds, and 3 repeats.
+Because participants contribute repeated longitudinal specimens, the benchmark uses subject-grouped repeated nested cross-validation. No participant can occur in both train and test or inner train and validation partitions. The frozen folds additionally stratify on treatment arm and collection time point to stabilize the longitudinal composition across folds. The design is 5 outer folds, 3 inner folds, and 2 repeats.
 
 ```python
 from curated_microbiota.collections import prime_ptsd
@@ -220,9 +220,11 @@ Primary source publications are Franzosa et al., DOI `10.1038/s41564-018-0306-4`
 
 ## mllabiome benchmark
 
-`mllabiome-benchmark-v1` is the benchmark family used for the mllabiome manuscript. The benchmark identifier is shared across datasets while the evaluation design is target-specific.
+`mllabiome-benchmark-v2` is the benchmark family used for the mllabiome manuscript. The benchmark identifier is shared across datasets while the evaluation design is target-specific.
 
-Single-study classification targets use three repetitions of 5-fold outer nested cross-validation with 3-fold inner cross-validation. The PRIME PTSD intervention target is longitudinal and therefore uses subject-grouped outer and inner folds, with treatment arm plus collection time point used for stratification. Regression targets use the corresponding shuffled K-fold design. Repeated observations are kept within subject whenever subject grouping is required.
+Benchmark v2 is the canonical two-repeat transition. It supersedes `mllabiome-benchmark-v1`, which used three repeats for repeated nested cross-validation. Historical v1 releases remain unchanged so previously reported results stay reproducible.
+
+Single-study classification targets use two repetitions of 5-fold outer nested cross-validation with 3-fold inner cross-validation. The PRIME PTSD intervention target is longitudinal and therefore uses subject-grouped outer and inner folds, with treatment arm plus collection time point used for stratification. Regression targets use the corresponding shuffled K-fold design. Repeated observations are kept within subject whenever subject grouping is required.
 
 Multi-study benchmark targets use leave-one-dataset-out evaluation. The MetaIBS IBS target uses source study as the outer dataset and 3-fold study-grouped inner model selection. The CRC multicohort target uses 17 source cohorts as outer datasets and 3-fold study-grouped inner model selection. The multiclass IBD phenotype target uses four independent source domains as outer datasets and 3-fold study-grouped inner model selection. Multi-study LAMPP tasks use leave-one-dataset-out evaluation, with `study_id` defining the outer held-out dataset. CRC and GHS use 3-fold study-grouped inner model selection because subjects are unique. IBD, DM7, and DM90 use 3-fold subject-grouped inner model selection because subjects contribute repeated observations. The complete outer and inner assignments are distributed with each target and are not regenerated during manuscript analyses.
 

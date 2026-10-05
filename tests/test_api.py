@@ -34,13 +34,13 @@ def test_collections():
     assert collections.prjna1190316.benchmark_targets == ("mdd",)
     assert collections.healthy_colombia.benchmark_targets == ("zung_depression",)
     assert collections.healthy_colombia.target().problem_type == "regression"
-    assert collections.healthy_colombia.splits().design.repeats == 3
+    assert collections.healthy_colombia.splits().design.repeats == 2
     assert collections.healthy_colombia.accession == "PRJNA1000574"
     assert collections.healthy_colombia.sequencing.region == "V3-V4"
-    assert MLLABIOME_BENCHMARK.id == "mllabiome-benchmark-v1"
+    assert MLLABIOME_BENCHMARK.id == "mllabiome-benchmark-v2"
     assert MLLABIOME_NCV.outer_folds == 5
     assert MLLABIOME_NCV.inner_folds == 3
-    assert MLLABIOME_NCV.repeats == 3
+    assert MLLABIOME_NCV.repeats == 2
     lampp = {study.name for study in collections.available(role="benchmark")}
     assert lampp == {
         "healthy_colombia",
@@ -78,7 +78,7 @@ def test_collections():
     assert collections.metaibs_ibs.source is not None
     assert collections.metaibs_ibs.source.name == "MetaIBS"
     assert collections.prime_ptsd.splits().protocol == "repeated_nested_cv"
-    assert collections.prime_ptsd.splits().design.repeats == 3
+    assert collections.prime_ptsd.splits().design.repeats == 2
     assert collections.prime_ptsd.source is not None
     assert collections.prime_ptsd.source.name == "PRIME"
     assert collections.prime_ptsd.samples == 169
@@ -156,7 +156,7 @@ def test_fetch(tmp_path, monkeypatch):
     monkeypatch.setenv("CURATED_MICROBIOTA_CACHE", str(tmp_path / "cache"))
     monkeypatch.setenv("CURATED_MICROBIOTA_RELEASE_URL", source.as_uri())
     assert local.counts.read_bytes() == payloads["counts.tsv"]
-    assert local.splits("mdd").path.read_bytes() == payloads["splits/mdd/mllabiome-benchmark-v1/cv_splits.tsv"]
+    assert local.splits("mdd").path.read_bytes() == payloads["splits/mdd/mllabiome-benchmark-v2/cv_splits.tsv"]
     assert local.cached
 
 
@@ -177,7 +177,7 @@ def test_mllabiome(tmp_path, monkeypatch):
         "metadata.tsv": metadata,
         "test_profiles.tsv": test_profiles,
         "test_metadata.tsv": test_metadata,
-        "splits/ibd/mllabiome-benchmark-v1/cv_splits.tsv": splits,
+        "splits/ibd/mllabiome-benchmark-v2/cv_splits.tsv": splits,
     }
     monkeypatch.setattr(type(study), "_file", lambda self, name: paths.get(name, tmp_path / name))
     module = SimpleNamespace(
@@ -198,7 +198,7 @@ def test_mllabiome(tmp_path, monkeypatch):
     assert evaluation.inner_folds == 3
     assert evaluation.repeats == 1
     assert evaluation.inner_grouping == "subject"
-    assert evaluation.benchmark_id == "mllabiome-benchmark-v1"
+    assert evaluation.benchmark_id == "mllabiome-benchmark-v2"
     assert evaluation.split_manifest == str(splits)
     assert inference.abundance_path == test_profiles
     assert inference.metadata_path == test_metadata
@@ -235,7 +235,7 @@ def test_prime_ptsd_mllabiome(tmp_path, monkeypatch):
     paths = {
         "profiles.tsv": profiles,
         "metadata.tsv": metadata,
-        "splits/intervention/mllabiome-benchmark-v1/cv_splits.tsv": splits,
+        "splits/intervention/mllabiome-benchmark-v2/cv_splits.tsv": splits,
     }
     monkeypatch.setattr(type(study), "_file", lambda self, name: paths.get(name, tmp_path / name))
     module = SimpleNamespace(
@@ -252,19 +252,19 @@ def test_prime_ptsd_mllabiome(tmp_path, monkeypatch):
     assert evaluation.protocol == "repeated_nested_cv"
     assert evaluation.outer_folds == 5
     assert evaluation.inner_folds == 3
-    assert evaluation.repeats == 3
+    assert evaluation.repeats == 2
 
 
 def test_packaged_release_manifest():
-    assert __data_release__ == "data-v0.1.4"
-    assert _base().endswith("/data-v0.1.4")
-    assert collections.brown_mdd.version == "0.1.1"
-    assert collections.brown_mdd._asset == "brown_mdd-0.1.1.tar.gz"
-    assert collections.metaibs_ibs.version == "0.1.1"
-    assert collections.crc_multicohort.version == "0.1.0"
-    assert collections.crc_multicohort._asset == "crc_multicohort-0.1.0.tar.gz"
-    assert collections.prime_ptsd.version == "0.1.1"
-    assert collections.healthy_colombia.version == "0.1.3"
-    assert collections.healthy_colombia._asset == "healthy_colombia-0.1.3.tar.gz"
-    assert collections.ibd_multiclass.version == "0.1.0"
-    assert collections.ibd_multiclass._asset == "ibd_multiclass-0.1.0.tar.gz"
+    assert __data_release__ == "data-v0.2.0"
+    assert _base().endswith("/data-v0.2.0")
+    assert collections.brown_mdd.version == "0.2.0"
+    assert collections.brown_mdd._asset == "brown_mdd-0.2.0.tar.gz"
+    assert collections.metaibs_ibs.version == "0.2.0"
+    assert collections.crc_multicohort.version == "0.2.0"
+    assert collections.crc_multicohort._asset == "crc_multicohort-0.2.0.tar.gz"
+    assert collections.prime_ptsd.version == "0.2.0"
+    assert collections.healthy_colombia.version == "0.2.0"
+    assert collections.healthy_colombia._asset == "healthy_colombia-0.2.0.tar.gz"
+    assert collections.ibd_multiclass.version == "0.2.0"
+    assert collections.ibd_multiclass._asset == "ibd_multiclass-0.2.0.tar.gz"

@@ -134,7 +134,7 @@ def split_manifest(metadata):
 def write_provenance(path, feature_count):
     values = [
         ("collection", "crc_multicohort"),
-        ("version", "0.1.0"),
+        ("version", "0.2.0"),
         ("source_samples", 3589),
         ("benchmark_samples", 2941),
         ("excluded_adenoma_samples", 648),
@@ -316,7 +316,7 @@ def main():
         pd.DataFrame(study_rows).to_csv(package / "study_metadata.tsv", sep="\t", index=False)
         pd.DataFrame(qc_rows).to_csv(package / "qc.tsv", sep="\t", index=False)
         write_provenance(package / "provenance.yaml", len(feature_order))
-        split_dir = package / "splits" / "crc" / "mllabiome-benchmark-v1"
+        split_dir = package / "splits" / "crc" / "mllabiome-benchmark-v2"
         split_dir.mkdir(parents=True)
         splits = split_manifest(metadata)
         splits.to_csv(split_dir / "cv_splits.tsv", sep="\t", index=False)
@@ -326,7 +326,7 @@ def main():
             "provenance.yaml",
             "qc.tsv",
             "study_metadata.tsv",
-            "splits/crc/mllabiome-benchmark-v1/cv_splits.tsv",
+            "splits/crc/mllabiome-benchmark-v2/cv_splits.tsv",
         }
         observed = {path.relative_to(package).as_posix() for path in package.rglob("*") if path.is_file()}
         if observed != required:
