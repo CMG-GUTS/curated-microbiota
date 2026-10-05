@@ -12,15 +12,59 @@ from curated_microbiota import collections
 
 
 ROOT = Path(__file__).resolve().parents[1]
-RELEASE_DIR = ROOT / "release_assets"
-RELEASE_MANIFEST = json.loads((RELEASE_DIR / "release-manifest.json").read_text())
-COLLECTION_RELEASES = RELEASE_MANIFEST["collections"]
+
+# The package manifest is always part of the source checkout and defines the
+# benchmark version under test.  The large v2 release tarballs intentionally
+# live outside git, so CI cannot assume ``release_assets/`` exists.
+PACKAGE_MANIFEST = json.loads(
+    (ROOT / "curated_microbiota" / "release-manifest.json").read_text()
+)
+COLLECTION_RELEASES = PACKAGE_MANIFEST["collections"]
+
+# When a local release bundle is present (for example immediately before
+# publishing), audit the actual v2 tarballs.  In an ordinary source checkout,
+# fall back to the tracked v1 frozen assets and inspect exactly the repeats
+# retained by benchmark v2.  CRC multicohort is new in v2 and therefore has a
+# compact split-only fixture under tests/data.
+LOCAL_RELEASE_DIR = ROOT / "release_assets"
+LEGACY_RELEASE_DIR = ROOT / "curated-microbiota-data-v0.1.3"
+LEGACY_MANIFEST_PATH = LEGACY_RELEASE_DIR / "release-manifest.json"
+LEGACY_MANIFEST = (
+    json.loads(LEGACY_MANIFEST_PATH.read_text())
+    if LEGACY_MANIFEST_PATH.exists()
+    else {"collections": {}}
+)
+CRC_FIXTURE = ROOT / "tests" / "data" / "crc_multicohort-v2-split-fixture.tar.gz"
 
 SPLIT_CASES = tuple(
     (collection_name, target_name)
     for collection_name, release in COLLECTION_RELEASES.items()
     for target_name in release.get("split_sets", {})
 )
+
+
+def _asset_source(collection_name, target_name, split_spec):
+    """Return (tar_path, split_path, retained_repeats_only).
+
+    ``retained_repeats_only`` is true when CI is auditing the v1 source
+    manifest from which v2 retained repeats 0 and 1.
+    """
+    current_release = COLLECTION_RELEASES[collection_name]
+    current_asset = LOCAL_RELEASE_DIR / current_release["asset"]
+    if current_asset.exists():
+        return current_asset, split_spec["file"], False
+
+    legacy_release = LEGACY_MANIFEST.get("collections", {}).get(collection_name)
+    if legacy_release is not None:
+        legacy_split = legacy_release.get("split_sets", {}).get(target_name)
+        assert legacy_split is not None, (collection_name, target_name)
+        legacy_asset = LEGACY_RELEASE_DIR / legacy_release["asset"]
+        assert legacy_asset.exists(), f"missing tracked legacy asset: {legacy_asset}"
+        return legacy_asset, legacy_split["file"], True
+
+    assert collection_name == "crc_multicohort", collection_name
+    assert CRC_FIXTURE.exists(), f"missing CI split fixture: {CRC_FIXTURE}"
+    return CRC_FIXTURE, split_spec["file"], False
 
 
 def _study(collection_name):
@@ -40,7 +84,7 @@ def _metadata(tar, study):
     return rows
 
 
-def _split_blocks(tar, split_file):
+def _split_blocks(tar, split_file, *, max_repeats=None):
     stream = tar.extractfile(split_file)
     assert stream is not None
     handle = io.TextIOWrapper(stream, encoding="utf-8", newline="")
@@ -50,6 +94,12 @@ def _split_blocks(tar, split_file):
             reader,
             key=lambda row: (int(row["repeat"]), int(row["outer_fold"])),
         ):
+            # benchmark-v2 deliberately retained repeats 0 and 1 from v1.
+            # Consume but do not yield later legacy repeats in CI fallback mode.
+            if max_repeats is not None and key[0] >= max_repeats:
+                for _ in rows:
+                    pass
+                continue
             yield key, rows
     finally:
         handle.close()
@@ -81,6 +131,22 @@ def _assert_count_spread_at_most(counters, keys, maximum):
         assert max(values) - min(values) <= maximum, (key, values)
 
 
+def test_benchmark_v2_declares_two_repeat_ncv():
+    assert PACKAGE_MANIFEST["benchmark"] == {
+        "name": "mllabiome-benchmark",
+        "version": 2,
+    }
+    repeated = [
+        spec
+        for release in COLLECTION_RELEASES.values()
+        for spec in release.get("split_sets", {}).values()
+        if spec["protocol"] == "repeated_nested_cv"
+    ]
+    assert repeated
+    assert all(int(spec["repeats"]) == 2 for spec in repeated)
+    assert all("mllabiome-benchmark-v2" in spec["file"] for spec in repeated)
+
+
 @pytest.mark.parametrize("collection_name,target_name", SPLIT_CASES)
 def test_release_split_integrity(collection_name, target_name):
     """Validate the actual frozen split manifest shipped in each release asset."""
@@ -88,9 +154,9 @@ def test_release_split_integrity(collection_name, target_name):
     split_spec = release["split_sets"][target_name]
     study = _study(collection_name)
     target = study.target(target_name)
-    asset = RELEASE_DIR / release["asset"]
-
-    assert asset.exists(), f"missing release asset: {asset}"
+    asset, split_file, retained_repeats_only = _asset_source(
+        collection_name, target_name, split_spec
+    )
 
     with tarfile.open(asset, "r:gz") as tar:
         metadata = _metadata(tar, study)
@@ -104,7 +170,11 @@ def test_release_split_integrity(collection_name, target_name):
         outer_strata_counts = defaultdict(dict)
         inner_strata_counts = defaultdict(dict)
 
-        for (repeat, outer_fold), rows in _split_blocks(tar, split_spec["file"]):
+        for (repeat, outer_fold), rows in _split_blocks(
+            tar,
+            split_file,
+            max_repeats=int(split_spec["repeats"]) if retained_repeats_only else None,
+        ):
             block_key = (repeat, outer_fold)
             assert block_key not in seen_outer_blocks, f"non-contiguous outer block {block_key}"
             seen_outer_blocks.add(block_key)
